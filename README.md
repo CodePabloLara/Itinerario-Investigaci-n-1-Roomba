@@ -84,3 +84,22 @@ ros2 topic echo /p1/stop_status
 ros2 topic echo /p1/wheel_status
 ros2 topic echo /p1/slip_status
 ros2 topic echo /p1/odom
+
+*INSTALACIÓN DE LIDAR EN LA RASPBERRY*
+
+Instalación del paquete para ROS 2 en la Raspberry
+Lo primero es acceder al github de YDLidar (link arriba) para obtener el paquete de ROS 2.
+Se debe clonar el Branch de Humble ya que estamos usando Ubuntu 22.04:
+git clone -b humble https://github.com/YDLIDAR/ydlidar_ros2_driver.git
+ydlidar_ros2_ws/src/ydlidar_ros2_driver
+Lo siguiente es hacer la construcción y compilación de la paquetería. En este caso el paquete se llamará ydlidar_ros2-ws:
+cd ydlidar_ros2_ws
+colcon build --symlink-install
+Siempre se debe recordar hacer la inicialización del paquete:
+source ./install/setup.bash
+SI se quiere que el paquete arranque junto con el encendido del sistema, se puede agregar al bash de inicio con los siguientes comandos:
+echo "source ~/ydlidar_ros2_ws/install/setup.bash" >> ~/.bashrc
+source ~/.bashrc
+Si llegase a ser necesario, se otorgan los siguientes comandos para darle los permisos necesarios al puerto para que pueda hacer la lectura correcta de los datos del módulo adaptador UART:
+chmod 0777 src/ydlidar_ros2_driver/startup/*
+sudo sh src/ydlidar_ros2_driver/startup/initenv.sh
