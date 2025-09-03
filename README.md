@@ -20,38 +20,47 @@ d. Instalar colcon (herramienta de compilación recomendada para ROS 2):
 sudo apt install python3-colcon-common-extensions
 
 *Configuración de herramientas para gestión de redes*
-Con el objetivo de facilitar la gestión de redes Wi-Fi sin editar manualmente archivos del
-sistema, se instalaron herramientas complementarias:
+Con el objetivo de facilitar la gestión de redes Wi-Fi sin editar manualmente archivos del sistema, se instalaron herramientas complementarias:
+
 a. Wireless Tools (iwlist):
 sudo apt install wireless-tools
 
+
 b. Network Manager:
 sudo apt install network-manager
+
 
 *Inicio y actualización del robot*
 Para comenzar con la configuración del iRobot Create 3, se utilizó como referencia la documentación oficial proporcionada por iRobot Education:
 https://iroboteducation.github.io/create3_docs/setup/ubuntu2204/
 
+
 *El procedimiento inicial de encendido y actualización se realizó de la siguiente forma:*
+
+
 ● El robot se enciende automáticamente al colocarlo sobre su base de carga.
-● Para ingresar al modo de configuración, se debe mantener presionados
-simultáneamente los dos botones físicos del robot (ubicados a cada lado del botón del
-power) hasta que el anillo LED cambie a color azul. Esto indica que el robot ha entrado
-en modo hotspot.
-● En este estado, el robot genera una red Wi-Fi con el nombre Create-03A9, a la cual se
-puede conectar un computador o la Raspberry Pi para realizar la configuración.
+
+
+● Para ingresar al modo de configuración, se debe mantener presionados simultáneamente los dos botones físicos del robot (ubicados a cada lado del botón del power) hasta que el anillo LED cambie a color azul. Esto indica que el robot ha entrado en modo hotspot.
+
+
+● En este estado, el robot genera una red Wi-Fi con el nombre Create-03A9, a la cual se puede conectar un computador o la Raspberry Pi para realizar la configuración.
+
+
 ● Desde un navegador web se accede a la dirección IP del robot en este modo:
 http://192.168.10.1/
-● En la pestaña “About” del portal web se puede verificar la información del robot,
-incluyendo su número de serie:
+
+
+● En la pestaña “About” del portal web se puede verificar la información del robot, incluyendo su número de serie:
 S/N: e17628 - este es el número de serie del Roomba que se tiene en RAMEL
-● En el mismo portal se puede actualizar el firmware del robot. Este proceso puede tardar
-varios minutos y es esencial completarlo antes de continuar. Al finalizar correctamente,
+
+
+● En el mismo portal se puede actualizar el firmware del robot. Este proceso puede tardar varios minutos y es esencial completarlo antes de continuar. Al finalizar correctamente,
 el anillo LED del robot cambia a blanco brillante.
-● En la pestaña de red del mismo portal, se configura la conexión Wi-Fi deseada,
-ingresando el SSID (nombre) y la contraseña de la red doméstica. Aquí es importante
-puntualizar que la red debe ser la misma a la que se va a conectar la raspberry para
-poder leer y compartir los tópicos del robot y manejarlos según convenga.
+
+
+● En la pestaña de red del mismo portal, se configura la conexión Wi-Fi deseada, ingresando el SSID (nombre) y la contraseña de la red doméstica. Aquí es importante puntualizar que la red debe ser la misma a la que se va a conectar la raspberry para poder leer y compartir los tópicos del robot y manejarlos según convenga.
+
 
 *Configuración red wifi del Roomba*
 Información del Roomba - aquí se ve el número de serie y su RMW para comunicación
