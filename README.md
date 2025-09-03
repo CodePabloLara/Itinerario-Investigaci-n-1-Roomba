@@ -27,3 +27,60 @@ sudo apt install wireless-tools
 
 b. Network Manager:
 sudo apt install network-manager
+
+*Inicio y actualización del robot*
+Para comenzar con la configuración del iRobot Create 3, se utilizó como referencia la documentación oficial proporcionada por iRobot Education:
+https://iroboteducation.github.io/create3_docs/setup/ubuntu2204/
+
+*El procedimiento inicial de encendido y actualización se realizó de la siguiente forma:*
+● El robot se enciende automáticamente al colocarlo sobre su base de carga.
+● Para ingresar al modo de configuración, se debe mantener presionados
+simultáneamente los dos botones físicos del robot (ubicados a cada lado del botón del
+power) hasta que el anillo LED cambie a color azul. Esto indica que el robot ha entrado
+en modo hotspot.
+● En este estado, el robot genera una red Wi-Fi con el nombre Create-03A9, a la cual se
+puede conectar un computador o la Raspberry Pi para realizar la configuración.
+● Desde un navegador web se accede a la dirección IP del robot en este modo:
+http://192.168.10.1/
+● En la pestaña “About” del portal web se puede verificar la información del robot,
+incluyendo su número de serie:
+S/N: e17628 - este es el número de serie del Roomba que se tiene en RAMEL
+● En el mismo portal se puede actualizar el firmware del robot. Este proceso puede tardar
+varios minutos y es esencial completarlo antes de continuar. Al finalizar correctamente,
+el anillo LED del robot cambia a blanco brillante.
+● En la pestaña de red del mismo portal, se configura la conexión Wi-Fi deseada,
+ingresando el SSID (nombre) y la contraseña de la red doméstica. Aquí es importante
+puntualizar que la red debe ser la misma a la que se va a conectar la raspberry para
+poder leer y compartir los tópicos del robot y manejarlos según convenga.
+
+*Configuración red wifi del Roomba*
+Información del Roomba - aquí se ve el número de serie y su RMW para comunicación
+Instalación en la Raspberry Pi del entorno del Roomba para conexión
+Una vez instalado ROS 2 Humble en la Raspberry Pi 4, se procedió a instalar los paquetes
+necesarios para la comunicación con el robot:
+sudo apt install -y ros-humble-irobot-create-msgs
+sudo apt install -y build-essential python3-colcon-common-extensions python3-rosdep
+ros-humble-rmw-cyclonedds-cpp
+El robot Create 3 utiliza el middleware Fast DDS (Fast RTPS) por defecto. Por ello, es
+necesario especificarlo en la configuración del entorno ROS 2:
+echo "export RMW_IMPLEMENTATION=rmw_fastrtps_cpp" >> ~/.bashrc
+source ~/.bashrc
+
+*Acceso remoto a la Raspberry Pi (SSH desde Windows o Ubuntu)*
+Desde un computador con Windows, se puede acceder remotamente a la Raspberry Pi
+mediante SSH:
+ssh pi@<IP_de_la_Pi>
+Se debe aceptar la clave SSH (escribir yes sí es la primera conexión) y luego ingresar la contraseña del usuario:
+
+*Verificación de estado del robot*
+Para comprobar el estado general del robot, se utilizaron los siguientes comandos:
+ros2 topic echo /p1/battery_state
+ros2 topic echo /p1/dock_status
+ros2 topic echo /p1/hazard_detection
+ros2 topic echo /p1/kidnap_status
+ros2 topic echo /p1/mobility_monitor/transition_event
+ros2 topic echo /p1/robot_state/transition_event
+ros2 topic echo /p1/stop_status
+ros2 topic echo /p1/wheel_status
+ros2 topic echo /p1/slip_status
+ros2 topic echo /p1/odom
