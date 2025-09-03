@@ -9,17 +9,23 @@ sudo apt update && sudo apt install curl gnupg lsb-release
 sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
 
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu
+
 $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
 
 b. Instalar ROS 2 Humble (versión base):
+
 sudo apt update
+
 sudo apt install ros-humble-ros-base
 
 c. Configurar entorno ROS para cada terminal:
+
 echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
+
 source ~/.bashrc
 
 d. Instalar colcon (herramienta de compilación recomendada para ROS 2):
+
 sudo apt install python3-colcon-common-extensions
 
 *Configuración de herramientas para gestión de redes*
@@ -66,52 +72,87 @@ el anillo LED del robot cambia a blanco brillante.
 
 
 *Configuración red wifi del Roomba*
+
 Información del Roomba - aquí se ve el número de serie y su RMW para comunicación
+
 Instalación en la Raspberry Pi del entorno del Roomba para conexión
-Una vez instalado ROS 2 Humble en la Raspberry Pi 4, se procedió a instalar los paquetes
-necesarios para la comunicación con el robot:
+
+Una vez instalado ROS 2 Humble en la Raspberry Pi 4, se procedió a instalar los paquetes necesarios para la comunicación con el robot:
+
 sudo apt install -y ros-humble-irobot-create-msgs
-sudo apt install -y build-essential python3-colcon-common-extensions python3-rosdep
-ros-humble-rmw-cyclonedds-cpp
-El robot Create 3 utiliza el middleware Fast DDS (Fast RTPS) por defecto. Por ello, es
-necesario especificarlo en la configuración del entorno ROS 2:
+
+sudo apt install -y build-essential python3-colcon-common-extensions python3-rosdep ros-humble-rmw-cyclonedds-cpp
+
+El robot Create 3 utiliza el middleware Fast DDS (Fast RTPS) por defecto. Por ello, es necesario especificarlo en la configuración del entorno ROS 2:
+
 echo "export RMW_IMPLEMENTATION=rmw_fastrtps_cpp" >> ~/.bashrc
+
 source ~/.bashrc
 
 *Acceso remoto a la Raspberry Pi (SSH desde Windows o Ubuntu)*
+
 Desde un computador con Windows, se puede acceder remotamente a la Raspberry Pi
+
 mediante SSH:
+
 ssh pi@<IP_de_la_Pi>
+
 Se debe aceptar la clave SSH (escribir yes sí es la primera conexión) y luego ingresar la contraseña del usuario:
 
 *Verificación de estado del robot*
+
 Para comprobar el estado general del robot, se utilizaron los siguientes comandos:
+
 ros2 topic echo /p1/battery_state
+
 ros2 topic echo /p1/dock_status
+
 ros2 topic echo /p1/hazard_detection
+
 ros2 topic echo /p1/kidnap_status
+
 ros2 topic echo /p1/mobility_monitor/transition_event
+
 ros2 topic echo /p1/robot_state/transition_event
+
 ros2 topic echo /p1/stop_status
+
 ros2 topic echo /p1/wheel_status
+
 ros2 topic echo /p1/slip_status
+
 ros2 topic echo /p1/odom
 
 *INSTALACIÓN DE LIDAR EN LA RASPBERRY*
 
 Instalación del paquete para ROS 2 en la Raspberry
+
 Lo primero es acceder al github de YDLidar (link arriba) para obtener el paquete de ROS 2.
+
 Se debe clonar el Branch de Humble ya que estamos usando Ubuntu 22.04:
+
 git clone -b humble https://github.com/YDLIDAR/ydlidar_ros2_driver.git
+
 ydlidar_ros2_ws/src/ydlidar_ros2_driver
+
 Lo siguiente es hacer la construcción y compilación de la paquetería. En este caso el paquete se llamará ydlidar_ros2-ws:
+
 cd ydlidar_ros2_ws
+
 colcon build --symlink-install
+
 Siempre se debe recordar hacer la inicialización del paquete:
+
 source ./install/setup.bash
+
 SI se quiere que el paquete arranque junto con el encendido del sistema, se puede agregar al bash de inicio con los siguientes comandos:
+
 echo "source ~/ydlidar_ros2_ws/install/setup.bash" >> ~/.bashrc
+
 source ~/.bashrc
+
 Si llegase a ser necesario, se otorgan los siguientes comandos para darle los permisos necesarios al puerto para que pueda hacer la lectura correcta de los datos del módulo adaptador UART:
+
 chmod 0777 src/ydlidar_ros2_driver/startup/*
+
 sudo sh src/ydlidar_ros2_driver/startup/initenv.sh
