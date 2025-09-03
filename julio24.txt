@@ -1,0 +1,21 @@
+en ubuntu:
+2 - export ROS_DOMAIN_ID=0
+3 - ros2 topic list //para verificar que se vean los tópicos 
+4 - ros2 topic echo /p1/battery_state // importante revisar la carga de la bateria
+5 - ros2 run rviz2 rviz2 --ros-args --remap tf:=/p1/tf --remap tf_static:=/p1/tf_static //ejecución del rviz con el remap para el namespace del create 3
+en rviz se cofigura fixed frame: odom
+luego de esto se presiona add y se agrega TF que nos permite ver las tf publicadas por el robot
+aqui suelo dejar mostradas: odom, base_link y laser_frame, con sus nombres y escala de 0,2
+leugo agergo el laser_scan pero desde la pestaña by topic
+ahi se deja todo igual excepto la opcion de reliability: best effort - esto es necesario para poder ver correctamente los puntos de escaneo del lidar - invertir rainbow ayuda a ver los puntos de forma mas intuitiva
+10 - scp pi@192.168.234.128:/home/pi/mapa_prueba_1.yaml . //esto es para pasar los archivos de la pi a la laptop
+
+en raspberry:
+1 - export ROS_DOMAIN_ID=0
+6 - ros2 launch ydlidar_ros2_driver ydlidar_launch.py //esto se ejecuta solo para comprobar que no hay problemas con el paquete del lidar EJECDUTAR PRIMERO EL Rviz Y LUEGO EL LIDAR
+7 - ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args --remap cmd_vel:=/p1/cmd_vel //por si se quisiera mover el robot para ver como cambia lo que muestra el /scan
+
+YA SE COMPROBÓ QUE TANTO rviz como el lidar funcionan por separado - ahora se debe de configurar el paquete del slam
+
+8 - ros2 launch my_slam_launch slam_launch.py // esto ejecuta el slam, se debe poner map en fixed frame, se controla por teleopkey
+9 - ros2 run nav2_map_server map_saver_cli -f ~/mapa_prueba_1 //para guardar el mapa (.pgm y .yaml generado)

@@ -1,0 +1,69 @@
+Instalación y configuración del YDLidar Tmini pro
+
+fuentes: https://www.ydlidar.com/service_support/download.html?gid=22
+	 https://github.com/YDLIDAR/ydlidar_ros2_driver?tab=readme-ov-file0
+	 
+
+Proceso de instalación:
+
+-----------------------------------------------------------prueba del lidar-------------------------------------------------------
+
+conectar el lidar mediante usb, y revisar en que puedor se ha conectado:
+ls /dev/ttyUSB*
+dmesg | grep ttyUSB
+
+
+instalar dependencias necesarias: 
+sudo apt update
+sudo apt install git cmake g++ libusb-1.0-0-dev
+
+clonar el repositorio del SDK oficial:
+git clone https://github.com/YDLIDAR/YDLidar-SDK.git
+cd YDLidar-SDK
+
+compilar todo el SDK:
+mkdir build
+cd build
+cmake ..
+make -j$(nproc)
+
+compilar manualmente el archivo de prueba (depende del modelo, el archivo a ejecutarse): --- no se hace
+cd ~/YDLidar-SDK/examples
+g++ tmini_test.cpp -o tmini_test -I../src -I../include -lydlidar_sdk -lpthread
+
+ejecutar el programa de prueba: desde la carpeta anterior, no en examples
+sudo ./tmini_test /dev/ttyUSB0 230400
+
+---------------------------------------------------prueba con ros (usar repositorio del guthub para más detalles)---------------------------------------------------
+clonar el repositorio (ros2 humble):
+git clone -b humble https://github.com/YDLIDAR/ydlidar_ros2_driver.git ydlidar_ros2_ws/src/ydlidar_ros2_driver
+
+hacer un build (se crea un workspace y no un paquete, por eso es necesario el build):
+cd ydlidar_ros2_ws
+colcon build --symlink-install
+
+sourcear:
+source ./install/setup.bash
+
+hacer echo para que ros siempre detecte el ws:
+echo "source ~/ydlidar_ros2_ws/install/setup.bash" >> ~/.bashrc
+source ~/.bashrc
+
+confirmación:
+printenv | grep -i ROS
+
+darle permisos al puerto:
+chmod 0777 src/ydlidar_ros2_driver/startup/*
+sudo sh src/ydlidar_ros2_driver/startup/initenv.sh
+
+AQUI SE CONFIGURA EL LIDAR: hay que revisar que el archivo de params de lidar en el src Tmini.yaml tenga la información correcta
+luego, este archivo tiene que ser llamado en el archivo de ydlidar_launch_view. este archivo abre la ventana de RViz donde se puede probar que funciona
+
+launch del lidar:
+ros2 launch ydlidar_ros2_driver ydlidar_launch_view.py
+ros2 launch ydlidar_ros2_driver ydlidar_launch.py ---- ESTO YA SE EJECUTA EN EL SLAM_WS, SOLO ACTIVAR RViz para ver TF y Scaneo
+
+echo del tópico "/scan" (este es el tópico del lidar):
+ros2 topic echo /scan
+
+
