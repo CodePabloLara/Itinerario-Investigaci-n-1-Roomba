@@ -156,3 +156,11 @@ Si llegase a ser necesario, se otorgan los siguientes comandos para darle los pe
 chmod 0777 src/ydlidar_ros2_driver/startup/*
 
 sudo sh src/ydlidar_ros2_driver/startup/initenv.sh
+
+Inicialización del paquete:
+
+El paquete se ejecuta con el siguiente comando:
+
+ros2 launch ydlidar_ros2_driver ydlidar_launch_view.py
+
+USAR ROS_DOMAIN_ID PARA VISUALIZAR RVIZ si no se tiene interfaz gráfica en la Raspberry
